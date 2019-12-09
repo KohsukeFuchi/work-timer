@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <link href="fullcalendar/core/main.css" rel="stylesheet" />
+  <link href="fullcalendar/daygrid/main.css" rel="stylesheet" />
+
+  <script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
+  <script type="text/javascript" src="js/moment.min.js"></script>
+  <script type="text/javascript" src="fullcalendar/core/main.js"></script>
+  <script type="text/javascript" src="fullcalendar/daygrid/main.js"></script>
+  <title>Sample</title>
+</head>
+<body>
+  <p>Hello World</p>
+  <div id="calendar"></div>
+  <script>
+  document.addEventListener('DOMContentLoaded', function() {
+        var calendarEl = document.getElementById('calendar');
+
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+          plugins: [ 'dayGrid', 'timeGrid', 'list' ]
+        });
+
+        calendar.render();
+      });
+
+  </script>
+</body>
+</html>
