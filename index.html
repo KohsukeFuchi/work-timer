@@ -9,6 +9,11 @@
   <script type="text/javascript" src="js/moment.min.js"></script>
   <script type="text/javascript" src="fullcalendar/core/main.js"></script>
   <script type="text/javascript" src="fullcalendar/daygrid/main.js"></script>
+  <script type="text/javascript" src="fullcalendar/core/locales/ja.js"></script>
+  <script type="text/javascript" src="fullcalendar/interaction/main.min.js"></script>
+  <script type="text/javascript" src="fullcalendar/timegrid/main.min.js"></script>
+  <script type="text/javascript" src="fullcalendar/daygrid/main.min.js"></script>
+  <script type="text/javascript" src="fullcalendar/interaction/main.min.js"></script>
   <title>Sample</title>
 </head>
 <body>
@@ -17,9 +22,34 @@
   <script>
   document.addEventListener('DOMContentLoaded', function() {
         var calendarEl = document.getElementById('calendar');
+        let draggableEl = document.getElementById('mydraggable');
 
         var calendar = new FullCalendar.Calendar(calendarEl, {
-          plugins: [ 'dayGrid', 'timeGrid', 'list' ]
+          plugins: [ 'dayGrid', 'timeGrid', 'interaction' ],
+          locale: 'ja',
+          events: [
+           {
+             title: 'My Event',
+             start: '2020-01-01',
+             url: 'http://google.com/'
+           }
+           // other events here
+           ],
+           droppable: true,
+           header: {
+             left: 'prev,next today',
+             center: 'title',
+             right: 'dayGridMonth,timeGridWeek,timeGridDay'
+           },
+           editable: true,
+           eventLimit: true, // when too many events in a day, show the popover
+           drop: function(info) {
+              // is the "remove after drop" checkbox checked?
+              if (checkbox.checked) {
+                // if so, remove the element from the "Draggable Events" list
+                info.draggedEl.parentNode.removeChild(info.draggedEl);
+              }
+            }
         });
 
         calendar.render();
