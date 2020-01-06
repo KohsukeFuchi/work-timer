@@ -1,0 +1,8 @@
+.task-form{
+  display:none;
+  z-index: 1;
+}
+.modalWindow{
+  display: none;
+  z-index: 2;
+}

@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <link href="fullcalendar/core/main.css" rel="stylesheet" />
   <link href="fullcalendar/daygrid/main.css" rel="stylesheet" />
+  <link href="style.css" rel="stylesheet" />
 
   <script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
   <script type="text/javascript" src="js/moment.min.js"></script>
@@ -18,7 +19,14 @@
 </head>
 <body>
   <p>Hello World</p>
-  <div id="calendar"></div>
+  <div id="calendar">
+    <div class="task-form"></div>
+    <div class="modalWindow">
+      <div class="form-body">
+      </div>
+      <button id="close_modalWindow">close</button>
+    </div>
+
   <script>
   document.addEventListener('DOMContentLoaded', function() {
         var calendarEl = document.getElementById('calendar');
@@ -38,11 +46,23 @@
            droppable: true,
            header: {
              left: 'prev,next today',
-             center: 'title',
+             center: 'addEventButton',
              right: 'dayGridMonth,timeGridWeek,timeGridDay'
            },
+           selectable: true,
            editable: true,
            eventLimit: true, // when too many events in a day, show the popover
+           customButtons: {
+            addEventButton: {
+              text: 'add event...',
+              click: function() {
+                    $('.task-form, .modalWindow').fadeIn();
+              }
+            }
+          },
+          dateClick: function(info){
+            $('.task-form, .modalWindow').fadeIn();
+          },
            drop: function(info) {
               // is the "remove after drop" checkbox checked?
               if (checkbox.checked) {
@@ -55,6 +75,14 @@
         calendar.render();
       });
 
+  </script>
+  <script>
+    $(function(){
+
+      $('#close_modalWindow').on('click', function() {
+        $('.task-form, .modalWindow').fadeOut();
+      });
+    });
   </script>
 </body>
 </html>
