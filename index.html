@@ -15,16 +15,31 @@
   <script type="text/javascript" src="fullcalendar/timegrid/main.min.js"></script>
   <script type="text/javascript" src="fullcalendar/daygrid/main.min.js"></script>
   <script type="text/javascript" src="fullcalendar/interaction/main.min.js"></script>
+  <script src="events.js"></script>
   <title>Sample</title>
 </head>
 <body>
   <p>Hello World</p>
   <div id="calendar">
-    <div class="task-form"></div>
-    <div class="modalWindow">
+    </div>
+    <div class="task-form">
+    <div class="modalWindow"></div>
       <div class="form-body">
+        <form name="formname" id="date-form" action="">
+          <label id="001">日付 : </label>
+          <input id="date" type="text" name="a001" size="30" maxlenglabel="30" value="">
+          </br>
+          <label id="002">題名: </label>
+          <input id="title" type="text" name="a002" size="30" maxlenglabel="30" value="">
+          </br>
+          <label id="003">終了日 : </label>
+          <input id="end-date" type="text" name="a003" size="30" maxlenglabel="30" value="">
+          </br>
+          <button id="close_modalWindow">close</button>
+          <button id="add-date" onclick="add_date();">追加</button>
+        </form>
+
       </div>
-      <button id="close_modalWindow">close</button>
     </div>
 
   <script>
@@ -35,14 +50,7 @@
         var calendar = new FullCalendar.Calendar(calendarEl, {
           plugins: [ 'dayGrid', 'timeGrid', 'interaction' ],
           locale: 'ja',
-          events: [
-           {
-             title: 'My Event',
-             start: '2020-01-01',
-             url: 'http://google.com/'
-           }
-           // other events here
-           ],
+          events: events_data,
            droppable: true,
            header: {
              left: 'prev,next today',
@@ -56,11 +64,14 @@
             addEventButton: {
               text: 'add event...',
               click: function() {
+
                     $('.task-form, .modalWindow').fadeIn();
               }
             }
           },
           dateClick: function(info){
+            console.log(info.dateStr);
+            document.getElementById( "date" ).value = info.dateStr;
             $('.task-form, .modalWindow').fadeIn();
           },
            drop: function(info) {
@@ -83,6 +94,32 @@
         $('.task-form, .modalWindow').fadeOut();
       });
     });
+  </script>
+  <script>
+    function add_date(){
+      var readFile = new XMLHttpRequest();
+      var date = $("#date").val();
+      var title = $("#title").val();
+      var text = "{title:" + title +",start:" + date + "},";
+      readFile.open("GET", "events.js", true);
+      readFile.onreadystatechange = function ()
+     {
+         if(readFile.readyState === 4)
+         {
+             if(readFile.status === 200 || readFile.status == 0)
+             {
+                 var allText = readFile.responseText;
+                 var events_list = allText.split("]");
+                 events_list[events_list.length - 1];
+                 events_list.add("];");
+                 text = events_list.join();
+
+
+             }
+         }
+     }
+
+    }
   </script>
 </body>
 </html>
