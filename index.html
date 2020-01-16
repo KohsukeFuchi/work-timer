@@ -46,11 +46,19 @@
   document.addEventListener('DOMContentLoaded', function() {
         var calendarEl = document.getElementById('calendar');
         let draggableEl = document.getElementById('mydraggable');
+        let event_data_json;
+        storage.get('events', function(err, data){
+          if (err) throw err;
+          console.log(data);
+          event_data_json = JSON.parse(data);
+          console.log(event_data_json);
+        });
+
 
         var calendar = new FullCalendar.Calendar(calendarEl, {
           plugins: [ 'dayGrid', 'timeGrid', 'interaction' ],
           locale: 'ja',
-          events: events_data,
+
            droppable: true,
            header: {
              left: 'prev,next today',
@@ -72,6 +80,9 @@
           dateClick: function(info){
             console.log(info.dateStr);
             document.getElementById( "date" ).value = info.dateStr;
+            const dataPath = storage.getDataPath();
+            console.log(dataPath);
+
             $('.task-form, .modalWindow').fadeIn();
           },
            drop: function(info) {
@@ -90,6 +101,7 @@
   <script>
     $(function(){
 
+
       $('#close_modalWindow').on('click', function() {
         $('.task-form, .modalWindow').fadeOut();
       });
@@ -100,26 +112,22 @@
       var readFile = new XMLHttpRequest();
       var date = $("#date").val();
       var title = $("#title").val();
-      var text = "{title:" + title +",start:" + date + "},";
-      readFile.open("GET", "events.js", true);
-      readFile.onreadystatechange = function ()
-     {
-         if(readFile.readyState === 4)
-         {
-             if(readFile.status === 200 || readFile.status == 0)
-             {
-                 var allText = readFile.responseText;
-                 var events_list = allText.split("]");
-                 events_list[events_list.length - 1];
-                 events_list.add("];");
-                 text = events_list.join();
-
-
-             }
-         }
-     }
+      let text ;
+      storage.get('events', function(err, data){
+        if (err) throw err;
+        text = text + data;
+        console.log(text);
+      });
+      text = text + ',' + '{"title":' +'"' + title + '"' + ',"start":' + '"' + date + '"' + '}';
+     storage.set('events', text, function(err){
+       if (err) throw err;
+     });
 
     }
   </script>
+
+  <script>
+  </script>
+
 </body>
 </html>

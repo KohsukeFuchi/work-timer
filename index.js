@@ -5,11 +5,17 @@ const {app, BrowserWindow, webContents} = require('electron');
 
 const path = require('path');
 const url = require('url');
+
 let win;
 
 function createWindow () {
   // ブラウザウィンドウを作成します。
-  win = new BrowserWindow({width: 800, height: 600});
+  win = new BrowserWindow({width: 800, height: 600,
+    webPreferences: {
+      nodeIntegration: false,
+      preload: path.join(__dirname, 'preload.js'),  //フルパスの指定が必要
+    }
+   });
 
   win.webContents.openDevTools();
 
