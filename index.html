@@ -43,16 +43,15 @@
     </div>
 
   <script>
+  let event_data_json;
   document.addEventListener('DOMContentLoaded', function() {
         var calendarEl = document.getElementById('calendar');
         let draggableEl = document.getElementById('mydraggable');
-        let event_data_json;
-        storage.get('events', function(err, data){
-          if (err) throw err;
-          console.log(data);
-          event_data_json = JSON.parse(data);
+        const result = storage.get('events');
+        if(result.status){
+          event_data_json = result.data;
           console.log(event_data_json);
-        });
+        }
 
 
         var calendar = new FullCalendar.Calendar(calendarEl, {
@@ -67,22 +66,19 @@
            },
            selectable: true,
            editable: true,
+           events:event_data_json.data,
            eventLimit: true, // when too many events in a day, show the popover
            customButtons: {
             addEventButton: {
               text: 'add event...',
               click: function() {
-
-                    $('.task-form, .modalWindow').fadeIn();
+                $('.task-form, .modalWindow').fadeIn();
               }
             }
           },
           dateClick: function(info){
             console.log(info.dateStr);
             document.getElementById( "date" ).value = info.dateStr;
-            const dataPath = storage.getDataPath();
-            console.log(dataPath);
-
             $('.task-form, .modalWindow').fadeIn();
           },
            drop: function(info) {
@@ -109,19 +105,17 @@
   </script>
   <script>
     function add_date(){
-      var readFile = new XMLHttpRequest();
-      var date = $("#date").val();
-      var title = $("#title").val();
-      let text ;
-      storage.get('events', function(err, data){
-        if (err) throw err;
-        text = text + data;
-        console.log(text);
-      });
-      text = text + ',' + '{"title":' +'"' + title + '"' + ',"start":' + '"' + date + '"' + '}';
-     storage.set('events', text, function(err){
-       if (err) throw err;
-     });
+
+      let date = $("#date").val();
+      let title = $("#title").val();
+      let end_date = $("#end-date").val();
+      let add_event = {title:title,start:date,end:end_date,};
+      event_data_json.data.push(add_event);
+      console.log(event_data_json.data.data);
+      const save = storage.set('events',event_data_json);
+      if(save.status){
+        console.log(save);
+      }
 
     }
   </script>
